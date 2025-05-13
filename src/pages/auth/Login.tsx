@@ -25,8 +25,8 @@ const LoginPage: React.FC = () => {
       
       if (result.success) {
         showNotification({ message: result.message, status: 200 });
-        // In a real app, you would store the token and redirect
-        navigate("/dashboard");
+        // Navigate to the Home page instead of Dashboard
+        navigate("/home");
       } else {
         showNotification({ message: result.message, status: 400 });
       }
