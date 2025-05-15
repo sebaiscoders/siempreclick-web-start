@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { loginUser, recoverPassword } from "@/services/authService";
+import { loginUser, recoverPassword } from "@/api/auth/authApi";
 import { showNotification } from "@/services/notifications";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 
@@ -24,13 +24,13 @@ const LoginPage: React.FC = () => {
       const result = await loginUser(email, password);
       
       if (result.success) {
-        showNotification({ message: result.message, status: 200 });
-        // Navigate to the Home page instead of Dashboard
+        showNotification({ message: result.message || "Inicio de sesión exitoso", status: 200 });
         navigate("/home");
       } else {
-        showNotification({ message: result.message, status: 400 });
+        showNotification({ message: result.message || "Error en inicio de sesión", status: 400 });
       }
     } catch (error) {
+      console.error("Login error:", error);
       showNotification({ 
         message: "Error al intentar iniciar sesión", 
         status: 500 
