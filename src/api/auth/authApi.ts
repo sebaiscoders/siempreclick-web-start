@@ -1,6 +1,6 @@
-
-import { Config } from "../config/config";
 import { showNotification } from "@/services/notifications";
+import axios from 'axios';
+import { Config } from "../config/config";
 
 // Storage functions to emulate secure storage
 const storage = {
@@ -17,19 +17,17 @@ const storage = {
 
 export const loginUser = async (email: string, password: string): Promise<{ success: boolean; message: string }> => {
   try {
-    const url = `http://${Config.ApiURL}/api/musuario/login20`;
-    const response = await fetch(url, {
-      method: "POST",
+    const url = `/api/musuario/login20`; // Usamos proxy
+    const response = await axios.post(url, {
+      Mail: email,
+      Password: password,
+      EmpresaId: 1,
+    }, {
       headers: Config.HttpHeaders,
-      body: JSON.stringify({
-        Mail: email,
-        Password: password,
-        EmpresaId: 1,
-        // DeviceId would go here if we implement a similar feature
-      })
+      withCredentials: false
     });
 
-    const jsonData = await response.json();
+    const jsonData = response.data;
     console.log(jsonData);
 
     if (jsonData.Status === 200) {
@@ -55,16 +53,18 @@ export const loginUser = async (email: string, password: string): Promise<{ succ
 
 export const recoverPassword = async (email: string): Promise<{ success: boolean; message: string }> => {
   try {
-    const url = `http://${Config.ApiURL}/api/musuario/RecuperaPassword`;
-    const response = await fetch(url, {
-      method: "POST",
-      headers: Config.HttpHeaders,
-      body: JSON.stringify({
-        eMail: email,
-      })
+    const url = `/api/musuario/RecuperaPassword`; // Usamos proxy
+    const response = await axios.post(url, {
+      eMail: email,
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      withCredentials: false
     });
 
-    const jsonData = await response.json();
+    const jsonData = response.data;
     
     if (jsonData.Status === 200) {
       return { 
